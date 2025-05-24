@@ -1,15 +1,29 @@
+console.log("ajax.js loaded");
+
+
 // request to insert
-$("#addBtn").click(function(e){
+$(document).ready(function () {
+  $("#addBtn").click(function (e) {
     e.preventDefault();
+    console.log("Button clicked");
     let name = $("#name").val();
-    let designation = $("#designation").val();
-    let address = $("#address").val();
+    let dg = $("#designation").val();
+    let add = $("#address").val();
 
-    // Split full name
-    let nameParts = name.split(" ");
-    let fname = nameParts[0]; 
-    let lname = nameParts.slice(1).join(" ");
+    console.log(name, dg, add);
 
-    // console.log(fname, designation,lname, address);
-    
-})
+    // // Split full name
+    // let nameParts = name.split(" ");
+    // let firstname = nameParts[0];
+    // let lastname = nameParts.slice(1).join(" ");
+    // // console.log(firstname, lastname);
+    // console.log(firstname, designation, lastname, address);
+    // mydata = {
+    //   fname: firstname,
+    //   lname: lastname,
+    //   designation: dg,
+    //   address: add,
+    // };
+    // console.log(mydata);
+  });
+});
