@@ -3,6 +3,18 @@
 
 // request to insert
 $(document).ready(function () {
+
+  function showdata(){
+    $.ajax({
+      url:"retrieve.php",
+      method: 'GET',
+      success: function(data){
+          console.log(data);
+      }
+    })
+  }
+  showdata();
+
   $("#addBtn").click(function (e) {
     e.preventDefault();
     console.log("Button clicked");
