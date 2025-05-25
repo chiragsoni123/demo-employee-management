@@ -21,7 +21,7 @@ $(document).ready(function () {
             // console.log(x[i]);
             output += "<tr><td>"+ x[i].id + "</td><td>" + x[i].fname + " "+ 
             x[i].lname + "</td><td>" + x[i].designation + "</td><td>" + x[i].address + "</td><td> <button class='btn btn-warning btn-sm btn-edit'>Edit</button>"+
-            "<button class='btn btn-danger btn-sm btn-del'> Delete</button></td></tr>";
+            "<button class='btn btn-danger btn-sm btn-del' data-id="+x[i].id+ "> Delete</button></td></tr>";
           }
 
           $("#tbody").html(output);
@@ -87,5 +87,31 @@ $(document).ready(function () {
   //Delete data
   $("tbody").on("click",".btn-del", function(){
     console.log("Delete button clicked");
+    let id = $(this).attr("data-id");
+    // console.log(id);
+    mydata = {sid: id};
+    $.ajax({
+      url: "delete.php",
+      method: "POST",
+      data: JSON.stringify(mydata),
+      success: function(response){
+        // console.log(data);
+        let msg="";
+        if(response.status == "success"){
+          msg = "<div class='alert alert-success alert-dismissible fade show' role='alert'><strong>Yeahhhhh! </strong>Deleted successfully<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>";
+          $("#msgId").html(msg);
+          
+        }else if(response.status == "error"){
+          msg = "<div class='alert alert-danger alert-dismissible fade show' role='alert'><strong>OOPS! </strong>Something is wrong...<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>";
+          $("#msgId").html(msg);
+          
+        }
+        showdata();
+      },
+      error: function(xhr, status, error){
+      console.error("Delete AJAX error:", error);
+      $("#msgId").html("<div class='alert alert-danger'>AJAX error occurred.</div>");
+      }
+    })
   });
 });
