@@ -1,7 +1,7 @@
 <?php 
 $servername = "localhost";
 $username = "root";
-$password = "";
+$password = "Chirag_123"; //reove the password
 $database = "managment";
 
 // connection 

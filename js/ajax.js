@@ -5,11 +5,26 @@
 $(document).ready(function () {
 
   function showdata(){
+    output = "";
     $.ajax({
       url:"retrieve.php",
       method: 'GET',
+      dataType: 'json',
       success: function(data){
-          console.log(data);
+          // console.log(data);
+          if(data){
+            x=data;
+          }else{
+            x="";
+          }
+          for(let i=0; i< x.length; i++){
+            // console.log(x[i]);
+            output += "<tr><td>"+ x[i].id + "</td><td>" + x[i].fname + " "+ 
+            x[i].lname + "</td><td>" + x[i].designation + "</td><td>" + x[i].address + "</td><td> <button class='btn btn-warning btn-sm btn-edit'>Edit</button>"+
+            "<button class='btn btn-danger btn-sm btn-del'> Delete</button></td></tr>";
+          }
+
+          $("#tbody").html(output);
       }
     })
   }
@@ -60,11 +75,17 @@ $(document).ready(function () {
           alert("An error occurred. Check console.");
           $("#msgId").html(msg);
         }
-        
+        showdata();
       },
       error: function(xhr, status, error){
         console.error("Error occurred:", error);
-      }
+      },
     });
+  });
+
+
+  //Delete data
+  $("tbody").on("click",".btn-del", function(){
+    console.log("Delete button clicked");
   });
 });

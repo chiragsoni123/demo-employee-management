@@ -19,7 +19,7 @@
     <!-- Fullscreen Navigation Overlay -->
     <div class="wrapper">
         <ul>
-            <li><a href="/">Home</a></li>
+            <li><a href="index.html">Home</a></li>
             <li><a href="view.html">Emplyoees</a></li>
         </ul>
     </div>
@@ -37,28 +37,14 @@
             <table class="table" id="myTable">
             <thead>
                 <tr>
-                <th scope="col">S.No</th>
-                <th scope="col">Title</th>
-                <th scope="col">Description</th>
+                <th scope="col">ID</th>
+                <th scope="col">Name</th>
+                <th scope="col">Designation</th>
+                <th scope="col">Address</th>
                 <th scope="col">Actions</th>
                 </tr>
             </thead>
-            <tbody>
-                <!-- <?php
-                    $sql = "SELECT * FROM `notes`";
-                    $result = mysqli_query($conn, $sql);
-                    $sno = 0;
-                    while($row = mysqli_fetch_assoc($result)){
-                        $sno = $sno +1;
-                        echo "<tr>
-                                <th scope='row'>" . $sno ."</th>
-                                <td>" . $row['title'] ."</td>
-                                <td>" . $row['description'] ."</td>
-                                <td> <button class='edit btn btn-sn btn-primary' id=".$row['sno'].">Edit</button>  <button class='delete btn btn-sn btn-primary' id=d".$row['sno'].">Delete</button> </td>
-                            </tr>";
-                            
-                    }
-                ?> -->
+            <tbody id="tbody">               
                 
                
             </tbody>
