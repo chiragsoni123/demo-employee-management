@@ -4,6 +4,8 @@
 $(document).ready(function () {
 
   function showdata(){
+    $("#tbody").empty(); // Prevent duplicates
+
     output = "";
     $.ajax({
       url:"retrieve.php",
@@ -117,40 +119,91 @@ $(document).ready(function () {
     })
   });
 
+// edit button
+// $("tbody").on("click", ".btn-edit", function () {
+//   const id = $(this).data("id");
+
+//   $.ajax({
+//     url: "edit.php",
+//     method: "POST",
+//     dataType: "JSON",
+//     data: JSON.stringify({ sid: id }),
+//     success: function (data) {
+//       $("#edit-id").val(data.id);
+//       $("#edit-name").val(data.fname + " " + data.lname);
+//       $("#edit-designation").val(data.designation);
+//       $("#edit-address").val(data.address);
+
+//       for(let i=0; i< data.length; i++){
+//             // console.log(x[i]);
+//             if(x);
+//             output += "<tr><td>"+ num + "</td><td>" + data[i].fname + " "+ 
+//             data[i].lname + "</td><td>" + data[i].designation + "</td><td>" + data[i].address + "</td><td> <button class='btn btn-warning btn-sm btn-edit' data-id=" + data[i].id +">Edit</button>"+" "+
+//             "<button class='btn btn-danger btn-sm btn-del' data-id="+data[i].id+ "> Delete</button></td></tr>";
+            
+//           }
+
+//       // const editModal = new bootstrap.Modal(document.getElementById('editModal'));
+//       // editModal.show();
+//     },
+//     error: function (xhr, status, error) {
+//       console.error("Edit AJAX error:", error);
+//     }
+//   });
+// });
 
 $("tbody").on("click", ".btn-edit", function () {
-  const id = $(this).data("id");
+  const $row = $(this).closest("tr");
+  const id = $(this).attr("data-id");
 
-  $.ajax({
-    url: "edit.php",
-    method: "POST",
-    dataType: "JSON",
-    data: JSON.stringify({ sid: id }),
-    success: function (data) {
-      $("#edit-id").val(data.id);
-      $("#edit-name").val(data.fname + " " + data.lname);
-      $("#edit-designation").val(data.designation);
-      $("#edit-address").val(data.address);
+  // Get current cell values
+  const name = $row.find("td:eq(1)").text().trim(); // "John Doe"
+  const designation = $row.find("td:eq(2)").text().trim();
+  const address = $row.find("td:eq(3)").text().trim();
 
-      const editModal = new bootstrap.Modal(document.getElementById('editModal'));
-      editModal.show();
-    },
-    error: function (xhr, status, error) {
-      console.error("Edit AJAX error:", error);
-    }
-  });
+  // Create input fields
+  const nameInput = `<input type='text' class='form-control form-control-sm' value='${name}'>`;
+  // const desigInput = `<input type='text' class='form-control form-control-sm' value='${designation}'>`;
+  const addressInput = `<input type='text' class='form-control form-control-sm' value='${address}'>`;
+   const desigInput = `
+    <select id="edit-designation" class="form-select form-select-sm" autocomplete="organization-title">
+      <option ${designation === 'Team Lead' ? 'selected' : ''}>Team Lead</option>
+      <option ${designation === 'Software Developer' ? 'selected' : ''}>Software Developer</option>
+      <option ${designation === 'HR' ? 'selected' : ''}>HR</option>
+    </select>
+  `;
+
+  // Replace table cells with input fields
+  $row.find("td:eq(1)").html(nameInput);
+  $row.find("td:eq(2)").html(desigInput);
+  $row.find("td:eq(3)").html(addressInput);
+
+  // Replace action buttons
+  $row.find("td:eq(4)").html(`
+    <button class='btn btn-success btn-sm btn-update' data-id='${id}'>Update</button>
+    <button class='btn btn-secondary btn-sm btn-cancel'>Cancel</button>
+  `);
 });
 
-$("#editForm").submit(function (e) {
+$("tbody").on("click", ".btn-cancel", function (e) {
   e.preventDefault();
+  showdata(); // Just reloads original data
+});
 
-  const id = $("#edit-id").val();
-  const name = $("#edit-name").val().trim();
-  const nameParts = name.split(" ");
+
+
+// update button 
+$("tbody").on("click", ".btn-update", function () {
+  const $row = $(this).closest("tr");
+  const id = $(this).attr("data-id");
+
+  const nameVal = $row.find("td:eq(1) input").val().trim();
+  const designation = $row.find("td:eq(2) select").val().trim();
+  const address = $row.find("td:eq(3) input").val().trim();
+
+  const nameParts = nameVal.split(" ");
   const fname = nameParts[0];
   const lname = nameParts.slice(1).join(" ");
-  const designation = $("#edit-designation").val().trim();
-  const address = $("#edit-address").val().trim();
 
   const mydata = {
     id: id,
@@ -163,25 +216,15 @@ $("#editForm").submit(function (e) {
   $.ajax({
     url: "update.php",
     method: "POST",
-    dataType: "JSON",
     data: JSON.stringify(mydata),
+    dataType: "json",
     success: function (response) {
-      let msg = "";
-      console.log(response.status);
       if (response.status === "success") {
-        msg = "<div class='alert alert-success alert-dismissible fade show' role='alert'><strong>Success!</strong> Updated successfully.<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>";
-        $("#msgId").html(msg);
-
-        // const editModalInstance = bootstrap.Modal.getInstance(document.getElementById('editModal'));
-        const editModal = new bootstrap.Modal(document.getElementById('editModal'));
-        editModal.hide();
-
-        
+        showdata();
+        $("#msgId").html("<div class='alert alert-success alert-dismissible fade show' role='alert'><strong>Updated! </strong>Employee updated successfully.<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>");
       } else {
-        msg = "<div class='alert alert-danger alert-dismissible fade show' role='alert'><strong>Error!</strong> " + response.message + "<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>";
-        $("#msgId").html(msg);
+        $("#msgId").html("<div class='alert alert-danger alert-dismissible fade show' role='alert'><strong>Error! </strong>Failed to update.<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>");
       }
-      showdata(); 
     },
     error: function (xhr, status, error) {
       console.error("Update AJAX error:", error);
