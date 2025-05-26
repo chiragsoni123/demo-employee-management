@@ -1,7 +1,6 @@
 // console.log("ajax.js loaded");
 
 
-// request to insert
 $(document).ready(function () {
 
   function showdata(){
@@ -21,7 +20,7 @@ $(document).ready(function () {
           for(let i=0; i< x.length; i++){
             // console.log(x[i]);
             output += "<tr><td>"+ num + "</td><td>" + x[i].fname + " "+ 
-            x[i].lname + "</td><td>" + x[i].designation + "</td><td>" + x[i].address + "</td><td> <button class='btn btn-warning btn-sm btn-edit' data-id=" + x[i].id +">Edit</button>"+
+            x[i].lname + "</td><td>" + x[i].designation + "</td><td>" + x[i].address + "</td><td> <button class='btn btn-warning btn-sm btn-edit' data-id=" + x[i].id +">Edit</button>"+" "+
             "<button class='btn btn-danger btn-sm btn-del' data-id="+x[i].id+ "> Delete</button></td></tr>";
             num++;
           }
@@ -41,7 +40,6 @@ $(document).ready(function () {
 
     // console.log(name, dg, add);
 
-    // Split full name
     let nameParts = name.split(" ");
     let firstname = nameParts[0];
     let lastname = nameParts.slice(1).join(" ");
@@ -165,9 +163,11 @@ $("#editForm").submit(function (e) {
   $.ajax({
     url: "update.php",
     method: "POST",
+    dataType: "JSON",
     data: JSON.stringify(mydata),
     success: function (response) {
       let msg = "";
+      console.log(response.status);
       if (response.status === "success") {
         msg = "<div class='alert alert-success alert-dismissible fade show' role='alert'><strong>Success!</strong> Updated successfully.<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>";
         $("#msgId").html(msg);
