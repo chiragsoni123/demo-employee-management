@@ -96,6 +96,7 @@ $(document).ready(function () {
     $.ajax({
       url: "delete.php",
       method: "POST",
+      dataType: "json",
       data: JSON.stringify(mydata),
       success: function(response){
         // console.log(data);
@@ -103,14 +104,15 @@ $(document).ready(function () {
         if(response.status == "success"){
           msg = "<div class='alert alert-success alert-dismissible fade show' role='alert'><strong>Yeahhhhh! </strong>Deleted successfully<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>";
           $("#msgId").html(msg);
-          
+          showdata();
+          $(this).closest("tr").fadeOut();
         }else if(response.status == "error"){
           msg = "<div class='alert alert-danger alert-dismissible fade show' role='alert'><strong>OOPS! </strong>Something is wrong...<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>";
           $("#msgId").html(msg);
           
         }
-        showdata();
-        // $(this).closest("tr").fadeOut();
+        
+        
       },
       error: function(xhr, status, error){
       console.error("Delete AJAX error:", error);
@@ -119,51 +121,17 @@ $(document).ready(function () {
     })
   });
 
-// edit button
-// $("tbody").on("click", ".btn-edit", function () {
-//   const id = $(this).data("id");
-
-//   $.ajax({
-//     url: "edit.php",
-//     method: "POST",
-//     dataType: "JSON",
-//     data: JSON.stringify({ sid: id }),
-//     success: function (data) {
-//       $("#edit-id").val(data.id);
-//       $("#edit-name").val(data.fname + " " + data.lname);
-//       $("#edit-designation").val(data.designation);
-//       $("#edit-address").val(data.address);
-
-//       for(let i=0; i< data.length; i++){
-//             // console.log(x[i]);
-//             if(x);
-//             output += "<tr><td>"+ num + "</td><td>" + data[i].fname + " "+ 
-//             data[i].lname + "</td><td>" + data[i].designation + "</td><td>" + data[i].address + "</td><td> <button class='btn btn-warning btn-sm btn-edit' data-id=" + data[i].id +">Edit</button>"+" "+
-//             "<button class='btn btn-danger btn-sm btn-del' data-id="+data[i].id+ "> Delete</button></td></tr>";
-            
-//           }
-
-//       // const editModal = new bootstrap.Modal(document.getElementById('editModal'));
-//       // editModal.show();
-//     },
-//     error: function (xhr, status, error) {
-//       console.error("Edit AJAX error:", error);
-//     }
-//   });
-// });
-
 $("tbody").on("click", ".btn-edit", function () {
   const $row = $(this).closest("tr");
   const id = $(this).attr("data-id");
 
-  // Get current cell values
-  const name = $row.find("td:eq(1)").text().trim(); // "John Doe"
+
+  const name = $row.find("td:eq(1)").text().trim(); 
   const designation = $row.find("td:eq(2)").text().trim();
   const address = $row.find("td:eq(3)").text().trim();
 
-  // Create input fields
+
   const nameInput = `<input type='text' class='form-control form-control-sm' value='${name}'>`;
-  // const desigInput = `<input type='text' class='form-control form-control-sm' value='${designation}'>`;
   const addressInput = `<input type='text' class='form-control form-control-sm' value='${address}'>`;
    const desigInput = `
     <select id="edit-designation" class="form-select form-select-sm" autocomplete="organization-title">
@@ -173,12 +141,12 @@ $("tbody").on("click", ".btn-edit", function () {
     </select>
   `;
 
-  // Replace table cells with input fields
+
   $row.find("td:eq(1)").html(nameInput);
   $row.find("td:eq(2)").html(desigInput);
   $row.find("td:eq(3)").html(addressInput);
 
-  // Replace action buttons
+
   $row.find("td:eq(4)").html(`
     <button class='btn btn-success btn-sm btn-update' data-id='${id}'>Update</button>
     <button class='btn btn-secondary btn-sm btn-cancel'>Cancel</button>
@@ -187,7 +155,7 @@ $("tbody").on("click", ".btn-edit", function () {
 
 $("tbody").on("click", ".btn-cancel", function (e) {
   e.preventDefault();
-  showdata(); // Just reloads original data
+  showdata(); 
 });
 
 
