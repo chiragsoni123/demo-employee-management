@@ -1,7 +1,7 @@
 <?php 
-$servername = "localhost";
+$servername = "db";
 $username = "root";
-$password = ""; //reove the password
+$password = "root"; //reove the password
 $database = "managment";
 
 // connection 
@@ -11,4 +11,5 @@ $conn = mysqli_connect($servername, $username, $password, $database);
 if(!$conn){
     die("Connection failed: " . mysqli_connect_error());
 }
+// echo "Connected successfully to XAMPP MySQL database";
 ?>

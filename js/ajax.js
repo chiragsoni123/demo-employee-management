@@ -33,6 +33,7 @@ $(document).ready(function () {
   }
   showdata();
 
+  //insert data 
   $("#addBtn").click(function (e) {
     e.preventDefault();
     console.log("Button clicked");
@@ -140,17 +141,16 @@ $("tbody").on("click", ".btn-edit", function () {
       <option ${designation === 'HR' ? 'selected' : ''}>HR</option>
     </select>
   `;
+  const btns = `
+    <button class='btn btn-success btn-sm btn-update' data-id='${id}'>Update</button>
+    <button class='btn btn-secondary btn-sm btn-cancel'>Cancel</button>
+  `
 
 
   $row.find("td:eq(1)").html(nameInput);
   $row.find("td:eq(2)").html(desigInput);
   $row.find("td:eq(3)").html(addressInput);
-
-
-  $row.find("td:eq(4)").html(`
-    <button class='btn btn-success btn-sm btn-update' data-id='${id}'>Update</button>
-    <button class='btn btn-secondary btn-sm btn-cancel'>Cancel</button>
-  `);
+  $row.find("td:eq(4)").html(btns);
 });
 
 $("tbody").on("click", ".btn-cancel", function (e) {
